@@ -1,4 +1,6 @@
 #!/bin/bash
+## Bash script for dumping all databases in script's Location
+## by @makeme v.2020-06-24
 # DIR is the script's location
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # Dump all databases in separate files
