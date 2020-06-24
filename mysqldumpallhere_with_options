@@ -1,0 +1,66 @@
+#!/bin/bash
+## Bash script for dumping all databases in script's Location
+## with options
+## by @makeme v.2020-06-24
+#
+## Variables
+mysqlpassword=''
+datetime=''
+## DIR is the script's location
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+# Help
+show_help ()
+{
+	echo -u OPTION for username
+	echo -p OPTION for password
+	echo -t OPTION to add date to dumpfile
+	echo -h OPTION for help
+}
+## Dump all databases in separate files
+myslqdumpalldatabaseshere ()
+{
+for DB in $(mysql $user $mysqlpassword -e 'show databases' -s --skip-column-names); do
+    mysqldump $user $mysqlpassword $DB > "$DIR/$DB$datetime.sql";
+done
+}
+# Add options
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -u|--user)
+    user="-u$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -p|--password)
+    mysqlpassword="-p$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -t|--adddate)
+    datetime="$(date +_%Y_%m_%d-%H_%M)"
+    shift # past argument
+    shift # past value
+    ;;
+		-h|--help)
+    show_help
+		exit
+    ;;
+    --default)
+    DEFAULT=YES
+    shift # past argument
+    ;;
+    *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+		echo unknown option
+		exit
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+# execute
+myslqdumpalldatabaseshere
