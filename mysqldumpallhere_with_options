@@ -28,7 +28,6 @@ POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
 key="$1"
-
 case $key in
     -u|--user)
     user="-u$2"
