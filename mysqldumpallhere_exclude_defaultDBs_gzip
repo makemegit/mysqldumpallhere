@@ -1,0 +1,9 @@
+#!/bin/bash
+## Bash script for dumping all databases in script's Location
+## by @makeme v.2022-04-08
+# DIR is the script's location
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+# Dump all databases in separate files
+for DB in $(mysql -e 'show databases' -s --skip-column-names | egrep -v "information_schema|performance_schema"); do
+    mysqldump $DB | gzip -9 > "$DIR/$DB.sql";
+done
